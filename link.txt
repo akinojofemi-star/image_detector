@@ -1,2 +1,2 @@
-https://marcomynous-emotion-detector-app-ccg4bf.streamlit.app/
-https:/github.com/marcomynous/emotion_detector
+https://imagedetector-5cey3quxjkkdawrj95ub45.streamlit.app/
+https://github.com/akinojofemi-star/image_detector
