@@ -3,26 +3,27 @@ from PIL import Image
 import torch
 import io
 
-# Load your model and processor
+# Load pretrained model
 processor = AutoImageProcessor.from_pretrained("trpakov/vit-face-expression")
 model = AutoModelForImageClassification.from_pretrained("trpakov/vit-face-expression")
 
 def predict_emotion(image_input):
-    # If it's a Streamlit UploadedFile
+    # Handle Streamlit uploaded file
     if hasattr(image_input, "getvalue"):
         image_bytes = image_input.getvalue()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     else:
-        # Otherwise assume it's a file path
         image = Image.open(image_input).convert("RGB")
 
-    # Force the image into a list (batch of 1) and activate padding
+    # Preprocess image
     inputs = processor(images=[image], return_tensors="pt", padding=True)
 
     with torch.no_grad():
         outputs = model(**inputs)
         logits = outputs.logits
-        predicted_class_idx = logits.argmax(-1).item()
+        probabilities = torch.nn.functional.softmax(logits, dim=-1)[0]
+        predicted_class_idx = probabilities.argmax().item()
+        confidence = probabilities[predicted_class_idx].item() * 100
 
     label = model.config.id2label[predicted_class_idx]
-    return label
+    return label, confidence

@@ -1,0 +1,2 @@
+https://marcomynous-emotion-detector-app-ccg4bf.streamlit.app/
+https:/github.com/marcomynous/emotion_detector
